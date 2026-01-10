@@ -2,6 +2,12 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CustomerController;
+use App\Http\Controllers\Api\OrderController;
+
+Route::middleware('auth:api')->group(function () {
+    Route::apiResource('orders', OrderController::class);
+});
+
 
 Route::middleware('auth:api')->group(function () {
     Route::apiResource('customers', CustomerController::class);
