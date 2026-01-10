@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -13,9 +15,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string',
+            'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
+            'password' => 'required|min:6'
         ]);
 
         $user = User::create([
@@ -36,12 +38,20 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Email atau password salah'
             ], 401);
         }
+
+        ActivityLog::create([
+            'user_id' => Auth::guard('api')->id(),
+            'activity' => 'Login',
+            'endpoint' => '/api/login',
+            'method' => 'POST',
+            'ip_address' => $request->ip()
+        ]);
 
         return response()->json([
             'success' => true,
@@ -51,19 +61,24 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // PROFILE
+    // ME
     public function me()
     {
-        return response()->json([
-            'success' => true,
-            'data' => auth('api')->user()
-        ]);
+        return response()->json(Auth::guard('api')->user());
     }
 
     // LOGOUT
-    public function logout()
+    public function logout(Request $request)
     {
-        auth('api')->logout();
+        ActivityLog::create([
+            'user_id' => Auth::guard('api')->id(),
+            'activity' => 'Logout',
+            'endpoint' => '/api/logout',
+            'method' => 'POST',
+            'ip_address' => $request->ip()
+        ]);
+
+        Auth::guard('api')->logout();
 
         return response()->json([
             'success' => true,
