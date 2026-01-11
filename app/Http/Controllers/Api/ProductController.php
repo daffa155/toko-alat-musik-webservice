@@ -19,31 +19,35 @@ class ProductController extends Controller
 
     public function store(Request $request)
 {
-    $validated = $request->validate([
-        'name' => 'required|string',
-        'description' => 'required|string',
-        'price' => 'required|integer',
-        'stock' => 'required|integer',
-        'category_id' => 'required|exists:categories,id'
+    $request->validate([
+        'name'        => 'required',
+        'price'       => 'required|numeric',
+        'stock'       => 'required|numeric',
+        'category_id' => 'required|exists:categories,id',
+        'image'       => 'nullable|image|mimes:jpg,jpeg,png'
     ]);
 
-    // 1. Simpan product dulu
-    $product = Product::create($validated);
+    $imagePath = null;
 
-    // 2. Simpan log aktivitas
-    ActivityLog::create([
-        'user_id' => auth('api')->id(), // dari JWT
-        'activity' => 'Create Product',
-        'endpoint' => '/api/products',
-        'method' => 'POST',
-        'ip_address' => $request->ip()
+    // TEMPAT SIMPAN FOTO
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('products', 'public');
+    }
+
+    $product = Product::create([
+        'name'        => $request->name,
+        'price'       => $request->price,
+        'stock'       => $request->stock,
+        'category_id' => $request->category_id,
+        'image'       => $imagePath
     ]);
 
     return response()->json([
-        'status' => 'success',
-        'data' => $product
+        'message' => 'Produk berhasil ditambahkan',
+        'data'    => $product
     ], 201);
 }
+
 
     public function show($id)
     {

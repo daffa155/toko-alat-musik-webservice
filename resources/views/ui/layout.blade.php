@@ -7,15 +7,23 @@
 </head>
 <body>
 
+{{-- NAVBAR HANYA MUNCUL JIKA SUDAH LOGIN --}}
+@auth
 <nav class="navbar navbar-dark bg-dark px-3">
     <span class="navbar-brand">Toko Alat Musik</span>
-    <div>
+    <div class="d-flex gap-2">
         <a href="/products-ui" class="btn btn-sm btn-light">Products</a>
         <a href="/orders-ui" class="btn btn-sm btn-light">Orders</a>
+
+        <form method="POST" action="/logout-ui" class="d-inline">
+            @csrf
+            <button class="btn btn-sm btn-danger">Logout</button>
+        </form>
     </div>
 </nav>
+@endauth
 
-<div class="container mt-4">
+<div class="container mt-5">
     @yield('content')
 </div>
 
