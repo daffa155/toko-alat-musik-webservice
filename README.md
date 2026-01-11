@@ -22,3 +22,4 @@ Proyek ini dibuat untuk memenuhi tugas UAS Pemrograman Web Service.
 ```bash
 git clone https://github.com/username/toko-alat-musik-webservice.git
 cd toko-alat-musik-webservice
+link postman https://daffariq56-1617681.postman.co/workspace/Default-workspace~284b1f02-ae19-4597-bf28-a7dfcbdeb42b/collection/49209743-1ff72374-e3d5-4aaa-8143-ddc609926b68?action=share&creator=49209743
