@@ -8,11 +8,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->foreignId('category_id')
-                  ->after('id')
-                  ->constrained('categories')
-                  ->cascadeOnDelete();
-        });
+    $table->foreignId('category_id')
+          ->nullable()
+          ->after('id')
+          ->constrained('categories')
+          ->nullOnDelete();
+});
+
     }
 
     public function down(): void
