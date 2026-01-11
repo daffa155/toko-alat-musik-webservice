@@ -7,13 +7,24 @@ use App\Models\Category;
 
 class CategorySeeder extends Seeder
 {
-    public function run(): void
+    public function run()
     {
         Category::insert([
-            ['name' => 'Gitar'],
-            ['name' => 'Drum'],
-            ['name' => 'Keyboard'],
-            ['name' => 'Bass'],
+            [
+                'name' => 'Gitar',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Drum',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'name' => 'Keyboard',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }
