@@ -10,21 +10,42 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            'status' => 'success',
-            'data' => Category::all()
-        ]);
+        return Category::all();
     }
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required']);
+        $request->validate([
+            'name' => 'required'
+        ]);
 
-        $category = Category::create($request->all());
+        return Category::create([
+            'name' => $request->name
+        ]);
+    }
+
+    public function show($id)
+    {
+        return Category::findOrFail($id);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $category = Category::findOrFail($id);
+
+        $category->update([
+            'name' => $request->name
+        ]);
+
+        return $category;
+    }
+
+    public function destroy($id)
+    {
+        Category::destroy($id);
 
         return response()->json([
-            'status' => 'success',
-            'data' => $category
-        ], 201);
+            'message' => 'Category deleted'
+        ]);
     }
 }
